@@ -10,7 +10,7 @@ namespace SnakeV2
     {
         public int HeadX { get; set; }
         public int HeadY { get; set; }
-        public List<Coordinate> Body { get; set; }
-
+        public List<Point> Body { get; set; }
+        public int Direction { get; set; } // 1-4 Clockwise. Ex 1 = upp, 2 = Höger
     }
 }

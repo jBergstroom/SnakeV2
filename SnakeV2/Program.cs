@@ -10,6 +10,7 @@ namespace SnakeV2
     {
         static void Main(string[] args)
         {
+            Snake ourSnake = new Snake();
 
         }
     }
