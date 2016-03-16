@@ -11,5 +11,6 @@ namespace SnakeV2
         public int HeadX { get; set; }
         public int HeadY { get; set; }
         public List<Coordinate> Body { get; set; }
+
     }
 }
