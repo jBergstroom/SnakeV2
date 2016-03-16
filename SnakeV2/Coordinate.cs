@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SnakeV2
 {
-    class Snake
+    class Coordinate
     {
-        public int HeadX { get; set; }
-        public int HeadY { get; set; }
-        public List<Coordinate> Body { get; set; }
+        public int Xcoordinate { get; set; }
+        public int Ycoordinate { get; set; }
     }
 }
