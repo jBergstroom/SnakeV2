@@ -4,6 +4,5 @@
     {
         public bool HasApple { get; set; }
         public bool HasBody { get; set; }
-
     }
 }

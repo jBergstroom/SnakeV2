@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 namespace SnakeV2
 {
     public enum direction { up, right, down, left }
-    class Snake 
-    {
-        
+    class Snake
+    {       
         public direction currentDirection { get; set; }
-
         public int HeadX { get; set; }
         public int HeadY { get; set; }
         public List<Point> Body { get; set; }
