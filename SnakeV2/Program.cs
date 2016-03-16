@@ -10,8 +10,9 @@ namespace SnakeV2
     {
         static void Main(string[] args)
         {
+            Game game = new Game();
 
-            Snake ourSnake = new Snake();
+            game.Start();
 
         }
     }
