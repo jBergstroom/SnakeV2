@@ -12,7 +12,9 @@ namespace SnakeServer
         static void Main(string[] args)
         {
             Server ourServer = new Server();
-            Thread serverThread = new Thread();
+            Thread serverThread = new Thread(ourServer.Run);
+            serverThread.Start();
+            serverThread.Join();
         }
     }
 }
