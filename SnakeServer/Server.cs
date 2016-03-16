@@ -48,6 +48,7 @@ namespace SnakeServer
                 string message = "";
                 while (!message.Equals("quit"))
                 {
+                    
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
                     myServer.Broadcast(this, message);
