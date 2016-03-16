@@ -6,13 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnakeV2
 {
-    class Program
+    class Direction
     {
-        static void Main(string[] args)
-        {
-            Snake ourSnake = new Snake();
-
-
-        }
     }
 }
