@@ -32,11 +32,12 @@ namespace SnakeServer
                     nameOccupied = myServer.clientList.Select(x => x.name).Contains(message);
                     if (nameOccupied)
                     {
-                        myServer.SingleBroadcast(this, "Name is occupadoo, gorom gorratt");
+                        myServer.SingleBroadcast(this, "1;Name is occupadoo, gorom gorratt");
                     }
                     else
                     {
-                        myServer.Broadcast(this, $"{message} has joined");
+                        myServer.SingleBroadcast(this, $"0;Name is ok");
+                        myServer.Broadcast(this, $"{message} has join the gaming worlds");
                     }
                 } while (nameOccupied);
 
