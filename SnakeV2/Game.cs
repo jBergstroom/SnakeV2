@@ -14,22 +14,65 @@ namespace SnakeV2
         private Tile[,] board;
         Snake ourSnake;
 
+        public bool gameOver = false;
+
         public void Start()
         {
             Console.OutputEncoding = Encoding.UTF8;
             CreateBoard();
             Snakearator();
 
+            Thread boardThread = new Thread(RunGame);
+            Thread directionThread = new Thread(DirectionInput);
+            directionThread.Start();
+            boardThread.Start();
+
+
+            //GameOver();
+        }
+
+        private void DirectionInput()
+        {
             do
+            {
+                ConsoleKeyInfo input = Console.ReadKey();
+                if (input != null)
+                {
+                    switch (input.Key)
+                    {
+                        case ConsoleKey.LeftArrow:
+                            //int leftTemp = ((int)ourSnake.currentDirection - 1) % 4;
+                            //ourSnake.currentDirection = (direction)leftTemp;
+                            ourSnake.currentDirection--;
+                            if ((int)ourSnake.currentDirection < 0)
+                                ourSnake.currentDirection = (direction)3;
+                            break;
+                        case ConsoleKey.RightArrow:
+                            //int rightTemp = ((int)ourSnake.currentDirection + 1) % 4;
+                            //ourSnake.currentDirection = (direction)rightTemp;
+                            ourSnake.currentDirection++;
+                            if ((int)ourSnake.currentDirection > 3)
+                                ourSnake.currentDirection = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                    Thread.Sleep(10);
+            } while (true);
+        }
+
+        private void RunGame()
+        {
+            while (gameOver == false)
             {
                 Console.Clear();
 
                 DisplayBoard();
                 Movement();
-                Thread.Sleep(400);
-            } while (true);
-
-            GameOver();
+                Thread.Sleep(200);
+            } 
         }
 
         private void DisplayBoard()
@@ -67,16 +110,28 @@ namespace SnakeV2
             switch (ourSnake.currentDirection)
             {
                 case direction.up:
-                    ourSnake.HeadY--;
+                    if (ourSnake.HeadY - 1 >= 0)
+                        ourSnake.HeadY--;
+                    else
+                        GameOver();
                     break;
                 case direction.right:
-                    ourSnake.HeadX++;
+                    if (ourSnake.HeadX + 1 < BoardX)
+                        ourSnake.HeadX++;
+                    else
+                        GameOver();
                     break;
                 case direction.down:
-                    ourSnake.HeadY++;
+                    if (ourSnake.HeadY + 1 < BoardY)
+                        ourSnake.HeadY++;
+                    else
+                        GameOver();
                     break;
                 case direction.left:
-                    ourSnake.HeadX--;
+                    if (ourSnake.HeadY - 1 >= 0)
+                        ourSnake.HeadX--;
+                    else
+                        GameOver();
                     break;
                 default:
                     break;
@@ -94,21 +149,25 @@ namespace SnakeV2
                     board[x, y] = tile;
                 }
             }
-            board[4, 6].HasBody = true;
+            //board[4, 6].HasBody = true;
             board[4, 8].HasApple = true;
         }
 
         private void Snakearator()
         {
             Random rng = new Random();
-            ourSnake = new Snake(rng.Next(1,BoardX), rng.Next(1,BoardY));
+            ourSnake = new Snake(rng.Next(1, BoardX), rng.Next(1, BoardY));
 
             ourSnake.currentDirection = (direction)rng.Next(0, 4);
         }
 
         private void GameOver()
         {
-            
+            gameOver = true;
+            Console.Clear();
+            Console.WriteLine("Fyyyyyy du dog");
+            Console.ReadKey();
+            Environment.Exit(1);
         }
     }
 }
