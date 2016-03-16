@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SnakeV2
 {
-    class Snake
+    class Snake 
     {
+        enum direction { up, right, down, left }
         public int HeadX { get; set; }
         public int HeadY { get; set; }
         public List<Point> Body { get; set; }
-        public int Direction { get; set; } // 1-4 Clockwise. Ex 1 = upp, 2 = Höger
     }
 }
