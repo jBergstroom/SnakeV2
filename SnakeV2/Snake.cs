@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace SnakeV2
 {
-    class Snake 
+    class Snake
     {
-        enum direction { up, right, down, left }
         public int HeadX { get; set; }
         public int HeadY { get; set; }
-        public List<Point> Body { get; set; }
+        public List<Coordinate> Body { get; set; }
     }
 }
