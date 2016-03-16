@@ -11,12 +11,13 @@ namespace SnakeServer
 {
     public class Server
     {
-        List<ClientHandler> clientList = new List<ClientHandler>();
+        public bool GejmÅn = false;
+        public List<ClientHandler> clientList = new List<ClientHandler>();
         public void Run()
         {
             TcpListener myListner = new TcpListener(IPAddress.Any, 5000);
             Console.WriteLine("Snakeserver now listning.");
-
+            myListner.Start();
             try
             {
                 TcpClient c = myListner.AcceptTcpClient();
@@ -26,43 +27,68 @@ namespace SnakeServer
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message + "server exception");
             }
         }
-    }
-
-    public class ClientHandler
-    {
-        public TcpClient tcpclient;
-        private Server myServer;
-        public ClientHandler(TcpClient c, Server server)
+        public void DisconnectClient(ClientHandler client)
         {
-            tcpclient = c;
-            this.myServer = server;
+            clientList.Remove(client);
         }
 
-        public void Run()
+        internal void Broadcast(ClientHandler clientHandler, string message)
         {
-            try
+            List<ClientHandler> tmpList = new List<ClientHandler>();
+            foreach (var item in clientList)
             {
-                string message = "";
-                while (!message.Equals("quit"))
+                if (item.tcpclient.Connected)
                 {
-                    
-                    NetworkStream n = tcpclient.GetStream();
-                    message = new BinaryReader(n).ReadString();
-                    myServer.Broadcast(this, message);
-                    Console.WriteLine(message);
+                    tmpList.Add(item);
+                }
+            }
+            foreach (var item in tmpList)
+            {
+                NetworkStream n = item.tcpclient.GetStream();
+                BinaryWriter w = new BinaryWriter(n);
+                w.Write(message);
+                w.Flush();
+
+                if (tmpList.Count() == 1)
+                {
+                    NetworkStream not = item.tcpclient.GetStream();
+                    BinaryWriter what = new BinaryWriter(not);
+                    what.Write("Du är ju sååååååååååå ensam");
+                    what.Flush();
+                }
+            }
+        }
+        internal void SingleBroadcast(ClientHandler clientHandler, string message)
+        {
+            List<ClientHandler> tmpList = new List<ClientHandler>();
+            foreach (var item in clientList)
+            {
+                if (item.tcpclient.Connected)
+                {
+                    tmpList.Add(item);
+                }
+            }
+            foreach (var item in tmpList)
+            {
+                if (item == clientHandler)
+                {
+                    NetworkStream n = item.tcpclient.GetStream();
+                    BinaryWriter w = new BinaryWriter(n);
+                    w.Write(message);
+                    w.Flush();
                 }
 
-                myServer.DisconnectClient(this);
-                tcpclient.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                //if (tmpList.Count() == 1)
+                //{
+                //    NetworkStream not = item.tcpclient.GetStream();
+                //    BinaryWriter what = new BinaryWriter(not);
+                //    what.Write("Du är ju sååååååååååå ensam");
+                //    what.Flush();
+                //}
             }
         }
     }
-
 }
