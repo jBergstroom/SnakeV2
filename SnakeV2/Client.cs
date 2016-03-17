@@ -51,6 +51,7 @@ namespace SnakeV2
                 }
                 while (true)
                 {
+
                     Thread.Sleep(200);
                 }
             }
