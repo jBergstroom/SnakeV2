@@ -88,11 +88,15 @@ namespace SnakeV2
                     }
                     else if (tile.HasBody)
                     {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write("0");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else if (tile.HasApple)
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write("a");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else
                     {

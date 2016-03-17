@@ -18,7 +18,7 @@ namespace SnakeServer
         public void Run()
         {
             TcpListener myListner = new TcpListener(IPAddress.Any, 5000);
-            Console.WriteLine("Snakeserver now listning.");
+            Console.WriteLine("Snakeserver now listening...");
             try
             {
                 myListner.Start();
@@ -36,7 +36,6 @@ namespace SnakeServer
                     }
                     catch (Exception ex)
                     {
-
                         Console.WriteLine(ex.Message + "Server exception");
                     }
 
@@ -44,7 +43,7 @@ namespace SnakeServer
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message + " myListnernnrnrnrn exception");
+                Console.WriteLine(ex.Message + " myListener exception");
             }
             finally
             {
