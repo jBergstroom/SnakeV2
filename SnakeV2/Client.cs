@@ -13,6 +13,7 @@ namespace SnakeV2
     {
         public bool nameOk = false;
         private TcpClient client;
+        public bool game = true;
         public void Start()
         {
             Console.WriteLine("Enter server IP");
@@ -25,7 +26,6 @@ namespace SnakeV2
 
             Thread senderThread = new Thread(Send);
             senderThread.Start();
-
         }
 
         private void Send()
@@ -48,7 +48,6 @@ namespace SnakeV2
                 }
                 while (true)
                 {
-                    Console.WriteLine("Connected");
                     Thread.Sleep(200);
                 }
             }
@@ -71,10 +70,20 @@ namespace SnakeV2
                         nameOk = true;
                     else
                         Console.WriteLine(message[1]);
-                    Thread.Sleep(250);
                 }
                 while (true)
                 {
+                    Console.Clear();
+                    NetworkStream streamer = client.GetStream();
+                    message = new BinaryReader(streamer).ReadString().Split(';');
+                    if (message != null)
+                    {
+                        foreach (var item in message)
+                        {
+                            Console.WriteLine(item);
+                        }
+                    }
+                    Thread.Sleep(500);
                 }
             }
             catch (Exception ex)
