@@ -33,7 +33,6 @@ namespace SnakeV2
 
         private void Send()
         {
-
             string message = "";
             try
             {
@@ -51,6 +50,20 @@ namespace SnakeV2
                 }
                 while (true)
                 {
+                    ConsoleKeyInfo input = Console.ReadKey();
+                    if (input.Key == ConsoleKey.LeftArrow)
+                    {
+                        BinaryWriter writer = new BinaryWriter(streamer);
+                        writer.Write(1);
+                        writer.Flush();
+                    }
+                    else if (input.Key == ConsoleKey.RightArrow)
+                    {
+                        BinaryWriter writer = new BinaryWriter(streamer);
+                        writer.Write(0);
+                        writer.Flush();
+                    }
+
                     Thread.Sleep(200);
                 }
             }

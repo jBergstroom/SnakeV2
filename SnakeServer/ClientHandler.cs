@@ -54,7 +54,7 @@ namespace SnakeServer
                 {
                     Console.WriteLine(name + " is waiting for game to start");
                     Thread.Sleep(500);
-                    Console.Clear();
+                    
                 }
                 while (myServer.GejmÅn && message != "ded")
                 {
@@ -69,11 +69,12 @@ namespace SnakeServer
             }
             catch (Exception ex)
             {
+                myServer.DisconnectClient(this);
+                tcpclient.Close();
                 Console.WriteLine(ex.Message + " clienthandler exception");
             }
             finally
             {
-                myServer.DisconnectClient(this);
                 tcpclient.Close();
             }
         }

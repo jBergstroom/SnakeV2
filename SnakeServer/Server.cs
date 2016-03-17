@@ -16,36 +16,24 @@ namespace SnakeServer
         public bool GejmÅn = false;
         public List<ClientHandler> clientList = new List<ClientHandler>();
         public readonly object myLock = new object();
+        public int count = 0;
         public void Run()
         {
-            TcpListener myListner = new TcpListener(IPAddress.Any, 5000);
+            TcpListener myListener = new TcpListener(IPAddress.Any, 5000);
             Console.WriteLine("Snakeserver now listening...");
             try
             {
-                myListner.Start();
+                myListener.Start();
                 while (!GejmÅn)//Lobby
                 {
-
                     try
                     {
-                        TcpClient c = myListner.AcceptTcpClient();
+                        TcpClient c = myListener.AcceptTcpClient();
                         ClientHandler newClient = new ClientHandler(c, this);
-                        clientList.Add(newClient);
                         newClient.name = "Guest";
+                        clientList.Add(newClient);
                         Thread clientThread = new Thread(newClient.Run);
                         clientThread.Start();
-                        int count = 0;
-                        foreach (var item in clientList)
-                        {
-                            if (!item.nameOccupied)
-                            {
-                                count++;
-                            }
-                        }
-                        if (count >= 2)
-                        {
-                            GejmÅn = true;
-                        }
                     }
                     catch (Exception ex)
                     {
@@ -54,10 +42,11 @@ namespace SnakeServer
                 }
                 Game game = new Game();
                 Thread gameThread = new Thread(() => game.Start(clientList));
+                Thread inputThread = new Thread(() => ListenForInput(game, clientList.First()));
                 gameThread.Start();
+                inputThread.Start();
                 while (GejmÅn)
                 {
-
                     GameBroadcast();
                     Thread.Sleep(5);
                 }
@@ -68,11 +57,36 @@ namespace SnakeServer
             }
             finally
             {
-                if (myListner != null)
-                    myListner.Stop();
+                if (myListener != null)
+                    myListener.Stop();
             }
 
         }
+
+        public void ListenForInput(Game game, ClientHandler client)
+        {
+            NetworkStream n = client.tcpclient.GetStream();
+            BinaryReader listener = new BinaryReader(n);
+            int input = listener.ReadInt32();
+            if (input == 0)
+            {
+                int index = clientList.IndexOf(client);
+
+                if (((int)game.snakelist[index].currentDirection - 1) < 0)
+                    game.snakelist[index].currentDirection = (direction)3;
+                else
+                    game.snakelist[index].currentDirection--;
+            }
+            else if (input == 1)
+            {
+                int index = clientList.IndexOf(client);
+                if (((int)game.snakelist[index].currentDirection + 1) > 3)
+                    game.snakelist[index].currentDirection = 0;
+                else
+                    game.snakelist[index].currentDirection++;
+            }
+        }
+
         public void DisconnectClient(ClientHandler client)
         {
             Console.WriteLine($"Client {client.name} has left the building...");
@@ -142,6 +156,14 @@ namespace SnakeServer
                     NetworkStream n = item.tcpclient.GetStream();
                     BinaryWriter w = new BinaryWriter(n);
                     Console.WriteLine($"{message}");
+                    if (message.Split(';')[0] == "0")
+                    {
+                        count++;
+                    }
+                    if (count >= 2)
+                    {
+                        GejmÅn = true;
+                    }
                     w.Write(message);
                     w.Flush();
                 }
@@ -164,7 +186,7 @@ namespace SnakeServer
                     }
                 }
                 clientList = tmpList;
-                
+
                 //foreach (var item in tmpList)
                 //{
                 //    if (tmpList.Count() == 1)
