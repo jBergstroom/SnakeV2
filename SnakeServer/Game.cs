@@ -74,16 +74,17 @@ namespace SnakeV2
         {
             while (gameOver == false)
             {
-                Console.Clear();
+                //Console.Clear();
 
                 DisplayBoard();
                 Movement();
-                Thread.Sleep(100);
+                Thread.Sleep(50);
             }
         }
 
         private void DisplayBoard()
         {
+            Console.SetCursorPosition(0, 0);
             string worldString = "";
             for (int y = 0; y < BoardY; y++)
             {
@@ -178,7 +179,6 @@ namespace SnakeV2
         private void Snakearator()
         {
             Snake ourSnake = new Snake(rng.Next(5, BoardX-5), rng.Next(5, BoardY-5));
-            ourSnake.Alive = true;
             snakelist.Add(ourSnake);
             ourSnake.SnakeColor = colorList[colorCount];
             colorCount++;

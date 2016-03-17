@@ -19,6 +19,7 @@ namespace SnakeV2
         {
             HeadX = x;
             HeadY = y;
+            Alive = true;
         }
     }
 }

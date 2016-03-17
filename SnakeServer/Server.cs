@@ -17,6 +17,7 @@ namespace SnakeServer
         public List<ClientHandler> clientList = new List<ClientHandler>();
         public readonly object myLock = new object();
         public int count = 0;
+
         public void Run()
         {
             TcpListener myListener = new TcpListener(IPAddress.Any, 5000);
@@ -42,13 +43,17 @@ namespace SnakeServer
                 }
                 Game game = new Game();
                 Thread gameThread = new Thread(() => game.Start(clientList));
-                Thread inputThread = new Thread(() => ListenForInput(game, clientList));
+                gameThread.Priority = ThreadPriority.AboveNormal;
                 gameThread.Start();
-                inputThread.Start();
+                for (int i = 0; i < clientList.Count; i++)
+                {
+                    Thread inputThread = new Thread(() => ListenForInput(game, clientList[i], i));
+                    inputThread.Start();
+                }
                 while (GejmÅn)
                 {
                     GameBroadcast();
-                    Thread.Sleep(5);
+                    Thread.Sleep(2);
                 }
             }
             catch (Exception ex)
@@ -63,39 +68,30 @@ namespace SnakeServer
 
         }
 
-        public void ListenForInput(Game game, List<ClientHandler> clients)
+        public void ListenForInput(Game game, ClientHandler client, int index)
         {
-            List<BinaryReader> listners = new List<BinaryReader>();
-            foreach (var item in clients)
-            {
-                NetworkStream n = item.tcpclient.GetStream();
-                BinaryReader listener = new BinaryReader(n);
-                listners.Add(listener);
-            }
 
-            while (true)
+            NetworkStream n = client.tcpclient.GetStream();
+            BinaryReader listener = new BinaryReader(n);
+
+            while (true) //game.snakelist[index].Alive
             {
-                foreach (var item in listners)
+                int input = listener.ReadInt32();
+                if (input == 1)
                 {
-                    int input = item.ReadInt32();
-                    int index = listners.IndexOf(item);
-
-                    if (input == 1)
-                    {
-
-                        if (((int)game.snakelist[index].currentDirection - 1) < 0)
-                            game.snakelist[index].currentDirection = (direction)3;
-                        else
-                            game.snakelist[index].currentDirection--;
-                    }
-                    else if (input == 0)
-                    {
-                        if (((int)game.snakelist[index].currentDirection + 1) > 3)
-                            game.snakelist[index].currentDirection = 0;
-                        else
-                            game.snakelist[index].currentDirection++;
-                    }
+                    if (((int)game.snakelist[index].currentDirection - 1) < 0)
+                        game.snakelist[index].currentDirection = (direction)3;
+                    else
+                        game.snakelist[index].currentDirection--;
                 }
+                else if (input == 0)
+                {
+                    if (((int)game.snakelist[index].currentDirection + 1) > 3)
+                        game.snakelist[index].currentDirection = 0;
+                    else
+                        game.snakelist[index].currentDirection++;
+                }
+
             }
         }
 
