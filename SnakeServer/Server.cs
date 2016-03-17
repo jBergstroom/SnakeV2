@@ -42,7 +42,7 @@ namespace SnakeServer
                 }
                 Game game = new Game();
                 Thread gameThread = new Thread(() => game.Start(clientList));
-                Thread inputThread = new Thread(() => ListenForInput(game, clientList.First()));
+                Thread inputThread = new Thread(() => ListenForInput(game, clientList));
                 gameThread.Start();
                 inputThread.Start();
                 while (GejmÅn)
@@ -63,30 +63,33 @@ namespace SnakeServer
 
         }
 
-        public void ListenForInput(Game game, ClientHandler client)
+        public void ListenForInput(Game game, List<ClientHandler> clients)
         {
             while (true)
             {
-
-                NetworkStream n = client.tcpclient.GetStream();
-                BinaryReader listener = new BinaryReader(n);
-                int input = listener.ReadInt32();
-                if (input == 1)
+                foreach (var item in clients)
                 {
-                    int index = clientList.IndexOf(client);
 
-                    if (((int)game.snakelist[index].currentDirection - 1) < 0)
-                        game.snakelist[index].currentDirection = (direction)3;
-                    else
-                        game.snakelist[index].currentDirection--;
-                }
-                else if (input == 0)
-                {
-                    int index = clientList.IndexOf(client);
-                    if (((int)game.snakelist[index].currentDirection + 1) > 3)
-                        game.snakelist[index].currentDirection = 0;
-                    else
-                        game.snakelist[index].currentDirection++;
+                    NetworkStream n = item.tcpclient.GetStream();
+                    BinaryReader listener = new BinaryReader(n);
+                    int input = listener.ReadInt32();
+                    if (input == 1)
+                    {
+                        int index = clientList.IndexOf(item);
+
+                        if (((int)game.snakelist[index].currentDirection - 1) < 0)
+                            game.snakelist[index].currentDirection = (direction)3;
+                        else
+                            game.snakelist[index].currentDirection--;
+                    }
+                    else if (input == 0)
+                    {
+                        int index = clientList.IndexOf(item);
+                        if (((int)game.snakelist[index].currentDirection + 1) > 3)
+                            game.snakelist[index].currentDirection = 0;
+                        else
+                            game.snakelist[index].currentDirection++;
+                    }
                 }
             }
         }
