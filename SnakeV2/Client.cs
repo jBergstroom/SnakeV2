@@ -44,6 +44,12 @@ namespace SnakeV2
                     BinaryWriter writer = new BinaryWriter(streamer);
                     writer.Write(message);
                     writer.Flush();
+                    Thread.Sleep(200);
+                }
+                while (true)
+                {
+                    Console.WriteLine("Connected");
+                    Thread.Sleep(200);
                 }
             }
             catch (Exception ex)
@@ -65,6 +71,10 @@ namespace SnakeV2
                         nameOk = true;
                     else
                         Console.WriteLine(message[1]);
+                    Thread.Sleep(250);
+                }
+                while (true)
+                {
                 }
             }
             catch (Exception ex)
