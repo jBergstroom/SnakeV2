@@ -54,9 +54,9 @@ namespace SnakeServer
         }
         public void DisconnectClient(ClientHandler client)
         {
-            clientList.Remove(client);
             Console.WriteLine($"Client {client.name} has left the building...");
             Broadcast($"Client {client.name} chickend out...");
+            clientList.Remove(client);
             Console.Beep();
         }
 
