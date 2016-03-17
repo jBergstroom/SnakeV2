@@ -15,6 +15,7 @@ namespace SnakeServer
         public bool GejmÅn = false;
         public List<ClientHandler> clientList = new List<ClientHandler>();
         public readonly object myLock = new object();
+
         public void Run()
         {
             TcpListener myListner = new TcpListener(IPAddress.Any, 5000);
@@ -24,7 +25,6 @@ namespace SnakeServer
                 myListner.Start();
                 while (true)
                 {
-
                     try
                     {
                         TcpClient c = myListner.AcceptTcpClient();
@@ -38,7 +38,6 @@ namespace SnakeServer
                     {
                         Console.WriteLine(ex.Message + "Server exception");
                     }
-
                 }
             }
             catch (Exception ex)
@@ -50,8 +49,8 @@ namespace SnakeServer
                 if (myListner != null)
                     myListner.Stop();
             }
-
         }
+
         public void DisconnectClient(ClientHandler client)
         {
             clientList.Remove(client);
@@ -64,7 +63,7 @@ namespace SnakeServer
         {
             lock (myLock)
             {
-            List<ClientHandler> tmpList = new List<ClientHandler>();
+                List<ClientHandler> tmpList = new List<ClientHandler>();
 
                 foreach (var item in clientList)
                 {
@@ -74,10 +73,10 @@ namespace SnakeServer
                     //}
                     if (item != null)
                     {
-                    if (item.name.Trim() != "")
-                    {
-                        tmpList.Add(item);
-                    }
+                        if (item.name.Trim() != "")
+                        {
+                            tmpList.Add(item);
+                        }
                     }
                 }
                 clientList = tmpList;
@@ -87,23 +86,24 @@ namespace SnakeServer
                     {
                         message += (players.name + " is connected;");
                     }
-                    if(tmpList.Count() == 1)
+                    if (tmpList.Count() == 1)
                     {
                         NetworkStream n = item.tcpclient.GetStream();
                         BinaryWriter w = new BinaryWriter(n);
-                        w.Write(message+ "you are alone;");
+                        w.Write(message + ", you are alone;");
                         w.Flush();
                     }
                     else
                     {
-                    NetworkStream n = item.tcpclient.GetStream();
-                    BinaryWriter w = new BinaryWriter(n);
-                    w.Write(message);
-                    w.Flush();
+                        NetworkStream n = item.tcpclient.GetStream();
+                        BinaryWriter w = new BinaryWriter(n);
+                        w.Write(message);
+                        w.Flush();
                     }
                 }
             }
         }
+
         internal void SingleBroadcast(ClientHandler clientHandler, string message)
         {
             List<ClientHandler> tmpList = new List<ClientHandler>();
