@@ -102,7 +102,7 @@ namespace SnakeV2
                     {
                         Console.ForegroundColor = tile.Color;
                         Console.Write("0");
-                        Console.ForegroundColor = tile.Color;
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     //else if (tile.HasApple)
                     //{

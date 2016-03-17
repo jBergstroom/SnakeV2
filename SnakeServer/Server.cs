@@ -34,7 +34,15 @@ namespace SnakeServer
                         newClient.name = "Guest";
                         Thread clientThread = new Thread(newClient.Run);
                         clientThread.Start();
-                        if (clientList.Count > 1)
+                        int count = 0;
+                        foreach (var item in clientList)
+                        {
+                            if (!item.nameOccupied)
+                            {
+                                count++;
+                            }
+                        }
+                        if (count >= 2)
                         {
                             GejmÅn = true;
                         }
@@ -156,10 +164,7 @@ namespace SnakeServer
                     }
                 }
                 clientList = tmpList;
-                //foreach (var players in tmpList)
-                //{
-                //    message += (players.name + " is connected;");
-                //}
+                
                 //foreach (var item in tmpList)
                 //{
                 //    if (tmpList.Count() == 1)
