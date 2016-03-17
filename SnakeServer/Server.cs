@@ -34,7 +34,15 @@ namespace SnakeServer
                         newClient.name = "Guest";
                         Thread clientThread = new Thread(newClient.Run);
                         clientThread.Start();
-                        if (clientList.Count > 1)
+                        int count = 0;
+                        foreach (var item in clientList)
+                        {
+                            if (!item.nameOccupied)
+                            {
+                                count++;
+                            }
+                        }
+                        if (count >= 2)
                         {
                             GejmÅn = true;
                         }
@@ -141,44 +149,40 @@ namespace SnakeServer
         }
         internal void GameBroadcast()
         {
+            lock (myLock)
+            {
+                List<ClientHandler> tmpList = new List<ClientHandler>();
 
-            //lock (myLock)
-            //{
-            //    List<ClientHandler> tmpList = new List<ClientHandler>();
-
-            //    foreach (var item in clientList)
-            //    {
-            //        if (item != null)
-            //        {
-            //            if (item.name.Trim() != "")
-            //            {
-            //                tmpList.Add(item);
-            //            }
-            //        }
-            //    }
-            //    clientList = tmpList;
-            //    foreach (var players in tmpList)
-            //    {
-            //        message += (players.name + " is connected;");
-            //    }
-            //    foreach (var item in tmpList)
-            //    {
-            //        if (tmpList.Count() == 1)
-            //        {
-            //            NetworkStream n = item.tcpclient.GetStream();
-            //            BinaryWriter w = new BinaryWriter(n);
-            //            w.Write(message + "you are alone;");
-            //            w.Flush();
-            //        }
-            //        else
-            //        {
-            //            NetworkStream n = item.tcpclient.GetStream();
-            //            BinaryWriter w = new BinaryWriter(n);
-            //            w.Write(message);
-            //            w.Flush();
-            //        }
-            //    }
-            //}
+                foreach (var item in clientList)
+                {
+                    if (item != null)
+                    {
+                        if (item.name.Trim() != "")
+                        {
+                            tmpList.Add(item);
+                        }
+                    }
+                }
+                clientList = tmpList;
+                
+                //foreach (var item in tmpList)
+                //{
+                //    if (tmpList.Count() == 1)
+                //    {
+                //        NetworkStream n = item.tcpclient.GetStream();
+                //        BinaryWriter w = new BinaryWriter(n);
+                //        w.Write(message + "you are alone;");
+                //        w.Flush();
+                //    }
+                //    else
+                //    {
+                //        NetworkStream n = item.tcpclient.GetStream();
+                //        BinaryWriter w = new BinaryWriter(n);
+                //        w.Write(message);
+                //        w.Flush();
+                //    }
+                //}
+            }
         }
 
     }
