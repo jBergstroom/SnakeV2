@@ -14,53 +14,83 @@ namespace SnakeServer
     {
         public bool GejmÅn = false;
         public List<ClientHandler> clientList = new List<ClientHandler>();
+        public List<ClientHandler> clientList2 = new List<ClientHandler>();
+        public readonly object myLock = new object();
         public void Run()
         {
             TcpListener myListner = new TcpListener(IPAddress.Any, 5000);
             Console.WriteLine("Snakeserver now listning.");
-            myListner.Start();
             try
             {
-                TcpClient c = myListner.AcceptTcpClient();
-                ClientHandler newClient = new ClientHandler(c, this);
-                clientList.Add(newClient);
-                Thread clientThread = new Thread(newClient.Run);
-                clientThread.Start();
+                myListner.Start();
+                while (true)
+                {
+
+                    try
+                    {
+                        TcpClient c = myListner.AcceptTcpClient();
+                        ClientHandler newClient = new ClientHandler(c, this);
+                        clientList.Add(newClient);
+
+                        Thread clientThread = new Thread(newClient.Run);
+                        clientThread.Start();
+                    }
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine(ex.Message + "Server exception");
+                    }
+
+                }
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine(ex.Message + "Server exception");
+                Console.WriteLine(ex.Message + " myListnernnrnrnrn exception");
             }
+            finally
+            {
+                if (myListner != null)
+                    myListner.Stop();
+            }
+
         }
         public void DisconnectClient(ClientHandler client)
         {
             clientList.Remove(client);
+            Console.WriteLine($"Client {client.name} has left the building...");
+            Broadcast($"Client {client.name} chickend out...");
+            Console.Beep();
         }
 
-        internal void Broadcast(ClientHandler clientHandler, string message)
+        internal void Broadcast(string message)
         {
             List<ClientHandler> tmpList = new List<ClientHandler>();
-            foreach (var item in clientList)
+            lock (myLock)
             {
-                if (item.tcpclient.Connected)
-                {
-                    tmpList.Add(item);
-                }
-            }
-            foreach (var item in tmpList)
-            {
-                NetworkStream n = item.tcpclient.GetStream();
-                BinaryWriter w = new BinaryWriter(n);
-                w.Write(message);
-                w.Flush();
 
-                if (tmpList.Count() == 1)
+                foreach (var item in clientList)
                 {
-                    NetworkStream not = item.tcpclient.GetStream();
-                    BinaryWriter what = new BinaryWriter(not);
-                    what.Write("Du är ju sååååååååååå ensam");
-                    what.Flush();
+                    //if (item.tcpclient.Connected && item.name.Trim() != "")
+                    //{
+                    //    tmpList.Add(item);
+                    //}
+                    if (item.name.Trim() != "")
+                    {
+                        tmpList.Add(item);
+                    }
+                }
+                clientList = tmpList;
+                foreach (var item in tmpList)
+                {
+                    foreach (var players in tmpList)
+                    {
+                        message += (players.name + " is connected;");
+                    }
+
+                    NetworkStream n = item.tcpclient.GetStream();
+                    BinaryWriter w = new BinaryWriter(n);
+                    w.Write(message);
+                    w.Flush();
                 }
             }
         }

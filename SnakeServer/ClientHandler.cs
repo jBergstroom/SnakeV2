@@ -24,32 +24,37 @@ namespace SnakeServer
             try
             {
                 string message = "";
-                bool nameOccupied = false;
+                bool nameOccupied = true;
                 do
                 {
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
+                    message.Trim();
                     nameOccupied = myServer.clientList.Select(x => x.name).Contains(message);
-                    if (nameOccupied)
+                    if (message != "")
                     {
-                        myServer.SingleBroadcast(this, "1;Name is occupadoo, gorom gorratt");
-                    }
-                    else
-                    {
-                        myServer.SingleBroadcast(this, $"0;Name is ok");
-                        myServer.Broadcast(this, $"{message} has join the gaming worlds");
+                        if (nameOccupied)
+                        {
+                            myServer.SingleBroadcast(this, "1;Name is occupadoo, gorom gorratt");
+                        }
+                        else
+                        {
+                            myServer.SingleBroadcast(this, $"0;Name {message} is ok");
+                            name = message;
+                            myServer.Broadcast($"{message} has join the gaming worlds");
+                        }
                     }
                 } while (nameOccupied);
 
                 while (!myServer.GejmÅn)
                 {
-                    myServer.Broadcast(this, "Waiting for other player");
+                    myServer.Broadcast("Waiting for other player;");
                 }
                 while (myServer.GejmÅn && message != "ded")
                 {
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
-                    myServer.Broadcast(this, message);
+                    myServer.Broadcast(message);
                     Console.WriteLine(message);
                 }
 
@@ -58,7 +63,10 @@ namespace SnakeServer
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message + " clienthandler exception");
+            }
+            finally
+            {
                 myServer.DisconnectClient(this);
                 tcpclient.Close();
             }
