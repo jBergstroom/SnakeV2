@@ -74,6 +74,7 @@ namespace SnakeV2
                     else
                         Console.WriteLine(message[1]);
                 }
+                string tmp = "";
                 while (true)
                 {
                     Console.Clear();
@@ -83,9 +84,11 @@ namespace SnakeV2
                     {
                         foreach (var item in message)
                         {
-                            Console.WriteLine(item);
+                            tmp += item + "\n";
+                            //Console.WriteLine(item);
                         }
                     }
+                    Console.WriteLine(tmp);
                     Thread.Sleep(500);
                 }
             }

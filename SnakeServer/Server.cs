@@ -56,7 +56,7 @@ namespace SnakeServer
         {
             Console.WriteLine($"Client {client.name} has left the building...");
             Broadcast($"Client {client.name} chickend out...");
-            clientList.Remove(client);
+            clientList.RemoveAll(x => x.name == client.name);
             Console.Beep();
         }
 
@@ -64,7 +64,7 @@ namespace SnakeServer
         {
             lock (myLock)
             {
-            List<ClientHandler> tmpList = new List<ClientHandler>();
+                List<ClientHandler> tmpList = new List<ClientHandler>();
 
                 foreach (var item in clientList)
                 {
@@ -74,33 +74,32 @@ namespace SnakeServer
                     //}
                     if (item != null)
                     {
-                    if (item.name.Trim() != "")
-                    {
-                        tmpList.Add(item);
-                    }
+                        if (item.name.Trim() != "")
+                        {
+                            tmpList.Add(item);
+                        }
                     }
                 }
                 clientList = tmpList;
-                Console.WriteLine(tmpList.Count);
+                foreach (var players in tmpList)
+                {
+                    message += (players.name + " is connected;");
+                }
                 foreach (var item in tmpList)
                 {
-                    foreach (var players in tmpList)
-                    {
-                        message += (players.name + " is connected;");
-                    }
-                    if(tmpList.Count() == 1)
+                    if (tmpList.Count() == 1)
                     {
                         NetworkStream n = item.tcpclient.GetStream();
                         BinaryWriter w = new BinaryWriter(n);
-                        w.Write(message+ "you are alone;");
+                        w.Write(message + "you are alone;");
                         w.Flush();
                     }
                     else
                     {
-                    NetworkStream n = item.tcpclient.GetStream();
-                    BinaryWriter w = new BinaryWriter(n);
-                    w.Write(message);
-                    w.Flush();
+                        NetworkStream n = item.tcpclient.GetStream();
+                        BinaryWriter w = new BinaryWriter(n);
+                        w.Write(message);
+                        w.Flush();
                     }
                 }
             }
