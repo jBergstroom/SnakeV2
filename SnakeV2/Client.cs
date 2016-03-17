@@ -77,7 +77,7 @@ namespace SnakeV2
                 string tmp = "";
                 while (true)
                 {
-                    Console.Clear();
+                    //Console.Clear();
                     NetworkStream streamer = client.GetStream();
                     message = new BinaryReader(streamer).ReadString().Split(';');
                     if (message.Length > 0)
@@ -89,7 +89,7 @@ namespace SnakeV2
                         }
                     }
                     Console.WriteLine(tmp);
-                    Thread.Sleep(500);
+                    Thread.Sleep(200);
                 }
             }
             catch (Exception ex)

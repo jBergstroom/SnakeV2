@@ -48,7 +48,7 @@ namespace SnakeServer
                         }
                     }
                 } while (nameOccupied);
-
+                Thread.Sleep(50);
                 myServer.Broadcast("Waiting for other player;");
                 while (!myServer.GejmÅn)
                 {
