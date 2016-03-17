@@ -14,6 +14,7 @@ namespace SnakeServer
         public TcpClient tcpclient;
         private Server myServer;
         public string name;
+        public bool nameOccupied = true;
         public ClientHandler(TcpClient c, Server server)
         {
             tcpclient = c;
@@ -25,7 +26,6 @@ namespace SnakeServer
             try
             {
                 string message = "";
-                bool nameOccupied = true;
                 do
                 {
                     NetworkStream n = tcpclient.GetStream();
@@ -53,7 +53,8 @@ namespace SnakeServer
                 while (!myServer.GejmÅn)
                 {
                     Console.WriteLine(name + " is waiting for game to start");
-                    Thread.Sleep(200);
+                    Thread.Sleep(500);
+                    Console.Clear();
                 }
                 while (myServer.GejmÅn && message != "ded")
                 {
