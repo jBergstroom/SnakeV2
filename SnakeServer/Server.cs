@@ -156,27 +156,27 @@ namespace SnakeServer
                     }
                 }
                 clientList = tmpList;
-                foreach (var players in tmpList)
-                {
-                    message += (players.name + " is connected;");
-                }
-                foreach (var item in tmpList)
-                {
-                    if (tmpList.Count() == 1)
-                    {
-                        NetworkStream n = item.tcpclient.GetStream();
-                        BinaryWriter w = new BinaryWriter(n);
-                        w.Write(message + "you are alone;");
-                        w.Flush();
-                    }
-                    else
-                    {
-                        NetworkStream n = item.tcpclient.GetStream();
-                        BinaryWriter w = new BinaryWriter(n);
-                        w.Write(message);
-                        w.Flush();
-                    }
-                }
+                //foreach (var players in tmpList)
+                //{
+                //    message += (players.name + " is connected;");
+                //}
+                //foreach (var item in tmpList)
+                //{
+                //    if (tmpList.Count() == 1)
+                //    {
+                //        NetworkStream n = item.tcpclient.GetStream();
+                //        BinaryWriter w = new BinaryWriter(n);
+                //        w.Write(message + "you are alone;");
+                //        w.Flush();
+                //    }
+                //    else
+                //    {
+                //        NetworkStream n = item.tcpclient.GetStream();
+                //        BinaryWriter w = new BinaryWriter(n);
+                //        w.Write(message);
+                //        w.Flush();
+                //    }
+                //}
             }
         }
 
