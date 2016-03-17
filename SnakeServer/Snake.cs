@@ -10,6 +10,7 @@ namespace SnakeV2
     class Snake
     {       
         public direction currentDirection { get; set; }
+        public ConsoleColor SnakeColor { get; set; }
         public int HeadX { get; set; }
         public int HeadY { get; set; }
         public List<Point> Body { get; set; }

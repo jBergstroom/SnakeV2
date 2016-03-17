@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SnakeV2;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace SnakeServer
             try
             {
                 myListner.Start();
-                while (true)
+                while (!GejmÅn)//Lobby
                 {
 
                     try
@@ -33,12 +34,24 @@ namespace SnakeServer
                         newClient.name = "Guest";
                         Thread clientThread = new Thread(newClient.Run);
                         clientThread.Start();
+                        if (clientList.Count > 1)
+                        {
+                            GejmÅn = true;
+                        }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message + "Server exception");
                     }
+                }
+                Game game = new Game();
+                Thread gameThread = new Thread(() => game.Start(clientList));
+                gameThread.Start();
+                while (GejmÅn)
+                {
 
+                    GameBroadcast();
+                    Thread.Sleep(5);
                 }
             }
             catch (Exception ex)
@@ -126,5 +139,46 @@ namespace SnakeServer
                 }
             }
         }
+        internal void GameBroadcast()
+        {
+            lock (myLock)
+            {
+                List<ClientHandler> tmpList = new List<ClientHandler>();
+
+                foreach (var item in clientList)
+                {
+                    if (item != null)
+                    {
+                        if (item.name.Trim() != "")
+                        {
+                            tmpList.Add(item);
+                        }
+                    }
+                }
+                clientList = tmpList;
+                foreach (var players in tmpList)
+                {
+                    message += (players.name + " is connected;");
+                }
+                foreach (var item in tmpList)
+                {
+                    if (tmpList.Count() == 1)
+                    {
+                        NetworkStream n = item.tcpclient.GetStream();
+                        BinaryWriter w = new BinaryWriter(n);
+                        w.Write(message + "you are alone;");
+                        w.Flush();
+                    }
+                    else
+                    {
+                        NetworkStream n = item.tcpclient.GetStream();
+                        BinaryWriter w = new BinaryWriter(n);
+                        w.Write(message);
+                        w.Flush();
+                    }
+                }
+            }
+        }
+
     }
 }
