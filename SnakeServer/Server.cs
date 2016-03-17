@@ -65,17 +65,23 @@ namespace SnakeServer
 
         public void ListenForInput(Game game, List<ClientHandler> clients)
         {
+            List<BinaryReader> listners = new List<BinaryReader>();
+            foreach (var item in clients)
+            {
+                NetworkStream n = item.tcpclient.GetStream();
+                BinaryReader listener = new BinaryReader(n);
+                listners.Add(listener);
+            }
+
             while (true)
             {
-                foreach (var item in clients)
+                foreach (var item in listners)
                 {
+                    int input = item.ReadInt32();
+                    int index = listners.IndexOf(item);
 
-                    NetworkStream n = item.tcpclient.GetStream();
-                    BinaryReader listener = new BinaryReader(n);
-                    int input = listener.ReadInt32();
                     if (input == 1)
                     {
-                        int index = clientList.IndexOf(item);
 
                         if (((int)game.snakelist[index].currentDirection - 1) < 0)
                             game.snakelist[index].currentDirection = (direction)3;
@@ -84,7 +90,6 @@ namespace SnakeServer
                     }
                     else if (input == 0)
                     {
-                        int index = clientList.IndexOf(item);
                         if (((int)game.snakelist[index].currentDirection + 1) > 3)
                             game.snakelist[index].currentDirection = 0;
                         else
