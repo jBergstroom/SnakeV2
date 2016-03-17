@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SnakeServer
@@ -23,11 +24,13 @@ namespace SnakeServer
                 TcpClient c = myListner.AcceptTcpClient();
                 ClientHandler newClient = new ClientHandler(c, this);
                 clientList.Add(newClient);
+                Thread clientThread = new Thread(newClient.Run);
+                clientThread.Start();
             }
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message + "server exception");
+                Console.WriteLine(ex.Message + "Server exception");
             }
         }
         public void DisconnectClient(ClientHandler client)

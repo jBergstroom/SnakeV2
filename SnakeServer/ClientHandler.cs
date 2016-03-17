@@ -53,8 +53,8 @@ namespace SnakeServer
                     Console.WriteLine(message);
                 }
 
-                myServer.DisconnectClient(this);
-                tcpclient.Close();
+                //myServer.DisconnectClient(this);
+                //tcpclient.Close();
             }
             catch (Exception ex)
             {
