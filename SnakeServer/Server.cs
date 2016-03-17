@@ -80,6 +80,7 @@ namespace SnakeServer
                 {
                     NetworkStream n = item.tcpclient.GetStream();
                     BinaryWriter w = new BinaryWriter(n);
+                    Console.WriteLine($"{message}");
                     w.Write(message);
                     w.Flush();
                 }
