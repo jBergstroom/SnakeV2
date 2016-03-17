@@ -26,6 +26,9 @@ namespace SnakeV2
 
             Thread senderThread = new Thread(Send);
             senderThread.Start();
+
+            listenerThread.Join();
+            senderThread.Join();
         }
 
         private void Send()
