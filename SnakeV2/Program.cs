@@ -16,6 +16,7 @@ namespace SnakeV2
 
             Thread clientThread = new Thread(client.Start);
             clientThread.Start();
+            clientThread.Join();
             //client.Start();
             //game.Start();
         }
