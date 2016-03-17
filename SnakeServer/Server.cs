@@ -14,7 +14,6 @@ namespace SnakeServer
     {
         public bool GejmÅn = false;
         public List<ClientHandler> clientList = new List<ClientHandler>();
-        public List<ClientHandler> clientList2 = new List<ClientHandler>();
         public readonly object myLock = new object();
         public void Run()
         {
@@ -31,7 +30,7 @@ namespace SnakeServer
                         TcpClient c = myListner.AcceptTcpClient();
                         ClientHandler newClient = new ClientHandler(c, this);
                         clientList.Add(newClient);
-
+                        newClient.name = "Guest";
                         Thread clientThread = new Thread(newClient.Run);
                         clientThread.Start();
                     }
@@ -64,9 +63,9 @@ namespace SnakeServer
 
         internal void Broadcast(string message)
         {
-            List<ClientHandler> tmpList = new List<ClientHandler>();
             lock (myLock)
             {
+            List<ClientHandler> tmpList = new List<ClientHandler>();
 
                 foreach (var item in clientList)
                 {
@@ -74,9 +73,12 @@ namespace SnakeServer
                     //{
                     //    tmpList.Add(item);
                     //}
+                    if (item != null)
+                    {
                     if (item.name.Trim() != "")
                     {
                         tmpList.Add(item);
+                    }
                     }
                 }
                 clientList = tmpList;
@@ -86,11 +88,20 @@ namespace SnakeServer
                     {
                         message += (players.name + " is connected;");
                     }
-
+                    if(tmpList.Count() == 1)
+                    {
+                        NetworkStream n = item.tcpclient.GetStream();
+                        BinaryWriter w = new BinaryWriter(n);
+                        w.Write(message+ "you are alone;");
+                        w.Flush();
+                    }
+                    else
+                    {
                     NetworkStream n = item.tcpclient.GetStream();
                     BinaryWriter w = new BinaryWriter(n);
                     w.Write(message);
                     w.Flush();
+                    }
                 }
             }
         }
@@ -114,14 +125,6 @@ namespace SnakeServer
                     w.Write(message);
                     w.Flush();
                 }
-
-                //if (tmpList.Count() == 1)
-                //{
-                //    NetworkStream not = item.tcpclient.GetStream();
-                //    BinaryWriter what = new BinaryWriter(not);
-                //    what.Write("Du är ju sååååååååååå ensam");
-                //    what.Flush();
-                //}
             }
         }
     }

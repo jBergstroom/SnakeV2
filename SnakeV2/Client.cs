@@ -42,7 +42,7 @@ namespace SnakeV2
                     message = Console.ReadLine();
 
                     BinaryWriter writer = new BinaryWriter(streamer);
-                    writer.Write(message);
+                    writer.Write("name" + message);
                     writer.Flush();
                     Thread.Sleep(200);
                 }
