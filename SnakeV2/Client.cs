@@ -76,7 +76,7 @@ namespace SnakeV2
                     Console.Clear();
                     NetworkStream streamer = client.GetStream();
                     message = new BinaryReader(streamer).ReadString().Split(';');
-                    if (message != null)
+                    if (message.Length > 0)
                     {
                         foreach (var item in message)
                         {
