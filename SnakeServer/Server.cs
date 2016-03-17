@@ -80,6 +80,7 @@ namespace SnakeServer
                     }
                 }
                 clientList = tmpList;
+                Console.WriteLine(tmpList.Count);
                 foreach (var item in tmpList)
                 {
                     foreach (var players in tmpList)
