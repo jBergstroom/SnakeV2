@@ -10,8 +10,8 @@ namespace SnakeV2
 {
     public class Game
     {
-        private static int BoardX = 48;
-        private static int BoardY = 48;
+        private static int BoardX = 30;
+        private static int BoardY = 30;
         private Tile[,] board;
         public List<Snake> snakelist = new List<Snake>();
         public bool gameOver = false;
@@ -21,7 +21,6 @@ namespace SnakeV2
 
         public void Start(List<ClientHandler> list)
         {
-            Console.SetWindowSize(BoardX, BoardY);
             rng = new Random();
             Console.OutputEncoding = Encoding.UTF8;
             CreateBoard();
@@ -79,7 +78,7 @@ namespace SnakeV2
 
                 DisplayBoard();
                 Movement();
-                Thread.Sleep(200);
+                Thread.Sleep(100);
             }
         }
 
@@ -133,26 +132,26 @@ namespace SnakeV2
                         case direction.up:
                             if (ourSnake.HeadY - 1 >= 0)
                                 ourSnake.HeadY--;
-                            else
-                                ourSnake.Alive = false;//GameOver();
+                            //else
+                            //    ourSnake.Alive = false;//GameOver();
                             break;
                         case direction.right:
                             if (ourSnake.HeadX + 1 < BoardX)
                                 ourSnake.HeadX++;
-                            else
-                                ourSnake.Alive = false;//GameOver();
+                            //else
+                            //    ourSnake.Alive = false;//GameOver();
                             break;
                         case direction.down:
                             if (ourSnake.HeadY + 1 < BoardY)
                                 ourSnake.HeadY++;
-                            else
-                                ourSnake.Alive = false;//GameOver();
+                            //else
+                            //    ourSnake.Alive = false;//GameOver();
                             break;
                         case direction.left:
-                            if (ourSnake.HeadY - 1 >= 0)
+                            if (ourSnake.HeadX - 1 >= 0)
                                 ourSnake.HeadX--;
-                            else
-                                ourSnake.Alive = false;//GameOver();
+                            //else
+                            //    ourSnake.Alive = false;//GameOver();
                             break;
                         default:
                             break;
@@ -178,7 +177,7 @@ namespace SnakeV2
 
         private void Snakearator()
         {
-            Snake ourSnake = new Snake(rng.Next(1, BoardX), rng.Next(1, BoardY));
+            Snake ourSnake = new Snake(rng.Next(5, BoardX-5), rng.Next(5, BoardY-5));
             ourSnake.Alive = true;
             snakelist.Add(ourSnake);
             ourSnake.SnakeColor = colorList[colorCount];

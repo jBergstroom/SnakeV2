@@ -51,20 +51,21 @@ namespace SnakeV2
                 while (true)
                 {
                     ConsoleKeyInfo input = Console.ReadKey();
-                    if (input.Key == ConsoleKey.LeftArrow)
+                    if (input.Key == ConsoleKey.A)
                     {
                         BinaryWriter writer = new BinaryWriter(streamer);
                         writer.Write(1);
                         writer.Flush();
+                        
                     }
-                    else if (input.Key == ConsoleKey.RightArrow)
+                    else if (input.Key == ConsoleKey.D)
                     {
                         BinaryWriter writer = new BinaryWriter(streamer);
                         writer.Write(0);
                         writer.Flush();
                     }
-
-                    Thread.Sleep(200);
+                    
+                    //Thread.Sleep(200);
                 }
             }
             catch (Exception ex)

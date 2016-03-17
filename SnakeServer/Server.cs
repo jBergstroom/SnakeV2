@@ -65,25 +65,29 @@ namespace SnakeServer
 
         public void ListenForInput(Game game, ClientHandler client)
         {
-            NetworkStream n = client.tcpclient.GetStream();
-            BinaryReader listener = new BinaryReader(n);
-            int input = listener.ReadInt32();
-            if (input == 0)
+            while (true)
             {
-                int index = clientList.IndexOf(client);
 
-                if (((int)game.snakelist[index].currentDirection - 1) < 0)
-                    game.snakelist[index].currentDirection = (direction)3;
-                else
-                    game.snakelist[index].currentDirection--;
-            }
-            else if (input == 1)
-            {
-                int index = clientList.IndexOf(client);
-                if (((int)game.snakelist[index].currentDirection + 1) > 3)
-                    game.snakelist[index].currentDirection = 0;
-                else
-                    game.snakelist[index].currentDirection++;
+                NetworkStream n = client.tcpclient.GetStream();
+                BinaryReader listener = new BinaryReader(n);
+                int input = listener.ReadInt32();
+                if (input == 1)
+                {
+                    int index = clientList.IndexOf(client);
+
+                    if (((int)game.snakelist[index].currentDirection - 1) < 0)
+                        game.snakelist[index].currentDirection = (direction)3;
+                    else
+                        game.snakelist[index].currentDirection--;
+                }
+                else if (input == 0)
+                {
+                    int index = clientList.IndexOf(client);
+                    if (((int)game.snakelist[index].currentDirection + 1) > 3)
+                        game.snakelist[index].currentDirection = 0;
+                    else
+                        game.snakelist[index].currentDirection++;
+                }
             }
         }
 
@@ -160,7 +164,7 @@ namespace SnakeServer
                     {
                         count++;
                     }
-                    if (count >= 2)
+                    if (count >= 1)
                     {
                         GejmÅn = true;
                     }
