@@ -77,11 +77,13 @@ namespace SnakeV2
                 string tmp = "";
                 while (true)
                 {
-                    //Console.Clear();
                     NetworkStream streamer = client.GetStream();
                     message = new BinaryReader(streamer).ReadString().Split(';');
+                    
                     if (message.Length > 0)
                     {
+                        Console.Clear();
+                        tmp = "";
                         foreach (var item in message)
                         {
                             tmp += item + "\n";
