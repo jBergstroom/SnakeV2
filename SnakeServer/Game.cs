@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 
 namespace SnakeV2
 {
-    internal class Game
+    public class Game
     {
-        private static int BoardX = 20;
-        private static int BoardY = 10;
+        private static int BoardX = 48;
+        private static int BoardY = 48;
         private Tile[,] board;
-        List<Snake> snakelist = new List<Snake>();
+        public List<Snake> snakelist = new List<Snake>();
         public bool gameOver = false;
         public int colorCount = 0;
-        List<ConsoleColor> colorList = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.Magenta, ConsoleColor.Blue, ConsoleColor.Green , ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Gray};
+        public Random rng;
+        List<ConsoleColor> colorList = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.Magenta, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Gray };
 
         public void Start(List<ClientHandler> list)
         {
+            Console.SetWindowSize(BoardX, BoardY);
+            rng = new Random();
             Console.OutputEncoding = Encoding.UTF8;
             CreateBoard();
             foreach (var item in list)
@@ -93,24 +96,23 @@ namespace SnakeV2
                     {
                         if (x == snakelist[i].HeadX && y == snakelist[i].HeadY)
                         {
-                            Console.Write('S');
-                            worldString += "S";
+                            worldString += " S ";
                             snakehead = true;
                         }
                     }
-                    if (tile.HasBody && !snakehead)
+                    if (snakehead)
+                    {
+                        Console.Write(" S ");
+                    }
+                    else if (tile.HasBody)
                     {
                         Console.ForegroundColor = tile.Color;
-                        Console.Write("0");
+                        Console.Write(" 0 ");
                         Console.ForegroundColor = ConsoleColor.White;
                     }
-                    //else if (tile.HasApple)
-                    //{
-                    //    Console.Write("a");
-                    //}
                     else
                     {
-                        Console.Write(".");
+                        Console.Write(" . ");
                     }
                 }
 
@@ -124,35 +126,37 @@ namespace SnakeV2
             {
                 board[ourSnake.HeadX, ourSnake.HeadY].HasBody = true;
                 board[ourSnake.HeadX, ourSnake.HeadY].Color = ourSnake.SnakeColor;
-
-                switch (ourSnake.currentDirection)
+                if (ourSnake.Alive)
                 {
-                    case direction.up:
-                        if (ourSnake.HeadY - 1 >= 0)
-                            ourSnake.HeadY--;
-                        else
-                            GameOver();
-                        break;
-                    case direction.right:
-                        if (ourSnake.HeadX + 1 < BoardX)
-                            ourSnake.HeadX++;
-                        else
-                            GameOver();
-                        break;
-                    case direction.down:
-                        if (ourSnake.HeadY + 1 < BoardY)
-                            ourSnake.HeadY++;
-                        else
-                            GameOver();
-                        break;
-                    case direction.left:
-                        if (ourSnake.HeadY - 1 >= 0)
-                            ourSnake.HeadX--;
-                        else
-                            GameOver();
-                        break;
-                    default:
-                        break;
+                    switch (ourSnake.currentDirection)
+                    {
+                        case direction.up:
+                            if (ourSnake.HeadY - 1 >= 0)
+                                ourSnake.HeadY--;
+                            else
+                                ourSnake.Alive = false;//GameOver();
+                            break;
+                        case direction.right:
+                            if (ourSnake.HeadX + 1 < BoardX)
+                                ourSnake.HeadX++;
+                            else
+                                ourSnake.Alive = false;//GameOver();
+                            break;
+                        case direction.down:
+                            if (ourSnake.HeadY + 1 < BoardY)
+                                ourSnake.HeadY++;
+                            else
+                                ourSnake.Alive = false;//GameOver();
+                            break;
+                        case direction.left:
+                            if (ourSnake.HeadY - 1 >= 0)
+                                ourSnake.HeadX--;
+                            else
+                                ourSnake.Alive = false;//GameOver();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -174,8 +178,8 @@ namespace SnakeV2
 
         private void Snakearator()
         {
-            Random rng = new Random();
             Snake ourSnake = new Snake(rng.Next(1, BoardX), rng.Next(1, BoardY));
+            ourSnake.Alive = true;
             snakelist.Add(ourSnake);
             ourSnake.SnakeColor = colorList[colorCount];
             colorCount++;
