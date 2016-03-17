@@ -11,7 +11,8 @@ namespace SnakeV2
         static void Main(string[] args)
         {
             Game game = new Game();
-            
+            Client client = new Client();
+            client.Start();
             //game.Start();
         }
     }
