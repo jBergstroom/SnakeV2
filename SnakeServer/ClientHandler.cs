@@ -52,7 +52,7 @@ namespace SnakeServer
                 myServer.Broadcast("Waiting for other player;");
                 while (!myServer.GejmÅn)
                 {
-                    Console.WriteLine(name + " is waiting for game to start");
+                    //Console.WriteLine(name + " is waiting for game to start");
                     Thread.Sleep(500);
                     
                 }
