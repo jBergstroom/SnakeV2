@@ -34,7 +34,6 @@ namespace SnakeServer
                     message = new BinaryReader(n).ReadString();
                     message.Trim();
                     string color = colorList[colorCounter].ToUpper();
-                    colorCounter++;
                     nameOccupied = myServer.clientList.Select(x => x.name).Contains(message);
                     string partName = message.Substring(0, 4);
                     if (message != "" && partName == "name")
@@ -45,6 +44,7 @@ namespace SnakeServer
                         }
                         else
                         {
+                            colorCounter++;
                             myServer.SingleBroadcast(this, $"0;Name {message} is ok, your snake is " + color);
                             string restname = message.Substring(4);
                             name = restname;
