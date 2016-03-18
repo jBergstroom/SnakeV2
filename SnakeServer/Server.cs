@@ -22,6 +22,8 @@ namespace SnakeServer
         {
             TcpListener myListener = new TcpListener(IPAddress.Any, 5000);
             Console.WriteLine("Snakeserver now slithering...");
+            Thread gameStartThread = new Thread(gamestartInput);
+            gameStartThread.Start();
             try
             {
                 myListener.Start();
@@ -66,6 +68,25 @@ namespace SnakeServer
                     myListener.Stop();
             }
 
+        }
+
+        private void gamestartInput()
+        {
+            while (!GejmÅn)
+            {
+                Console.WriteLine("Press 'S' to start the game.");
+                ConsoleKeyInfo input = Console.ReadKey();
+                if (input.Key == ConsoleKey.S)
+                {
+                    Console.WriteLine("Starting Game in..");
+                    for (int i = 3; i > 0; i--)
+                    {
+                        Console.WriteLine(i);
+                        Thread.Sleep(1000);
+                    }
+                    GejmÅn = true;
+                }
+            }
         }
 
         public void ListenForInput(Game game, ClientHandler client, int index)
@@ -168,10 +189,10 @@ namespace SnakeServer
                     {
                         count++;
                     }
-                    if (count >= 1)
-                    {
-                        GejmÅn = true;
-                    }
+                    //if (count >= 1)
+                    //{
+                    //    GejmÅn = true;
+                    //}
                     w.Write(message);
                     w.Flush();
                 }
