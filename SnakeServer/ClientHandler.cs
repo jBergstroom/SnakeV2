@@ -15,6 +15,8 @@ namespace SnakeServer
         private Server myServer;
         public string name;
         public bool nameOccupied = true;
+        private List<string> colorList = new List<string> { "Red", "Blue", "Green", "Yellow", "Cyan", "Magenta", "Gray" };
+        private int colorCounter = 0;
         public ClientHandler(TcpClient c, Server server)
         {
             tcpclient = c;
@@ -31,6 +33,8 @@ namespace SnakeServer
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
                     message.Trim();
+                    string color = colorList[colorCounter];
+                    colorCounter++;
                     nameOccupied = myServer.clientList.Select(x => x.name).Contains(message);
                     string partName = message.Substring(0, 4);
                     if (message != "" && partName == "name")
@@ -41,8 +45,8 @@ namespace SnakeServer
                         }
                         else
                         {
+                            myServer.SingleBroadcast(this, $"0;Name {message} is ok, your snake is " + color);
                             string restname = message.Substring(4);
-                            myServer.SingleBroadcast(this, $"0;Name {restname} is ok");
                             name = restname;
                             myServer.Broadcast($"{message} has join the gaming worlds");
                         }

@@ -80,7 +80,6 @@ namespace SnakeServer
                 ConsoleKeyInfo input = Console.ReadKey();
                 if (input.Key == ConsoleKey.S)
                 {
-
                     Console.WriteLine("Starting Game in..");
                     for (int i = 3; i > 0; i--)
                     {
