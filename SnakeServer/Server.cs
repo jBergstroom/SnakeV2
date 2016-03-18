@@ -21,7 +21,7 @@ namespace SnakeServer
         public void Run()
         {
             TcpListener myListener = new TcpListener(IPAddress.Any, 5000);
-            Console.WriteLine("Snakeserver now listening...");
+            Console.WriteLine("Snakeserver now slithering...");
             try
             {
                 myListener.Start();
@@ -124,9 +124,9 @@ namespace SnakeServer
                     }
                 }
                 clientList = tmpList;
-                foreach (var players in tmpList)
+                foreach (var player in tmpList)
                 {
-                    message += (players.name + " is connected;");
+                    message += (player.name + " is connected.;");
                 }
                 foreach (var item in tmpList)
                 {
@@ -134,7 +134,7 @@ namespace SnakeServer
                     {
                         NetworkStream n = item.tcpclient.GetStream();
                         BinaryWriter w = new BinaryWriter(n);
-                        w.Write(message + "you are alone;");
+                        w.Write(message + "You are currently alone, wait for more players to join the server.;");
                         w.Flush();
                     }
                     else

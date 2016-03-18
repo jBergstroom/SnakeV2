@@ -17,7 +17,7 @@ namespace SnakeV2
         public bool gameOver = false;
         public int colorCount = 0;
         public Random rng;
-        List<ConsoleColor> colorList = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.Magenta, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Gray };
+        List<ConsoleColor> colorList = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Gray };
 
         public void Start(List<ClientHandler> list)
         {

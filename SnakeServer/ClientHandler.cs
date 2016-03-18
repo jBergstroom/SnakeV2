@@ -44,7 +44,7 @@ namespace SnakeServer
                             myServer.SingleBroadcast(this, $"0;Name {message} is ok");
                             string restname = message.Substring(4);
                             name = restname;
-                            //myServer.Broadcast($"{message} has join the gaming worlds");
+                            myServer.Broadcast($"{message} has join the gaming worlds");
                         }
                     }
                 } while (nameOccupied);
