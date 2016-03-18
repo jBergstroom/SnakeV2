@@ -22,8 +22,10 @@ namespace SnakeServer
         {
             TcpListener myListener = new TcpListener(IPAddress.Any, 5000);
             Console.WriteLine("Snakeserver now slithering...");
+
             Thread gameStartThread = new Thread(gamestartInput);
             gameStartThread.Start();
+
             try
             {
                 myListener.Start();
@@ -87,6 +89,7 @@ namespace SnakeServer
                     GejmÅn = true;
                 }
             }
+
         }
 
         public void ListenForInput(Game game, ClientHandler client, int index)
