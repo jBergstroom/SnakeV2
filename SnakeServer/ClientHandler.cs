@@ -33,7 +33,7 @@ namespace SnakeServer
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
                     message.Trim();
-                    string color = colorList[colorCounter];
+                    string color = colorList[colorCounter].ToUpper();
                     colorCounter++;
                     nameOccupied = myServer.clientList.Select(x => x.name).Contains(message);
                     string partName = message.Substring(0, 4);
