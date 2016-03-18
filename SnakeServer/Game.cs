@@ -85,7 +85,8 @@ namespace SnakeV2
 
         private void DisplayBoard()
         {
-            Console.SetCursorPosition(0, 0);
+            //Console.SetCursorPosition(0, 0);
+            Console.Clear();
             string worldString = "";
             for (int y = 0; y < BoardY; y++)
             {
@@ -119,12 +120,12 @@ namespace SnakeV2
 
                 Console.WriteLine();
             }
-            clearCount++;
-            if(clearCount>15)
-            {
-                Console.Clear();
-                clearCount = 0;
-            }
+            //clearCount++;
+            //if(clearCount>15)
+            //{
+            //    Console.Clear();
+            //    clearCount = 0;
+            //}
         }
 
         private void Movement()
@@ -187,7 +188,7 @@ namespace SnakeV2
         {
             Snake ourSnake = new Snake(rng.Next(5, BoardX-5), rng.Next(5, BoardY-5));
             snakelist.Add(ourSnake);
-            ourSnake.SnakeColor = colorList[colorCount];
+            ourSnake.SnakeColor = colorList[rng.Next(1,7)];
             colorCount++;
             ourSnake.currentDirection = (direction)rng.Next(0, 4);
         }
