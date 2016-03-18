@@ -17,6 +17,7 @@ namespace SnakeV2
         public bool gameOver = false;
         public int colorCount = 0;
         public Random rng;
+        private int clearCount = 0;
         List<ConsoleColor> colorList = new List<ConsoleColor> { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Gray };
 
         public void Start(List<ClientHandler> list)
@@ -117,6 +118,12 @@ namespace SnakeV2
                 }
 
                 Console.WriteLine();
+            }
+            clearCount++;
+            if(clearCount>15)
+            {
+                Console.Clear();
+                clearCount = 0;
             }
         }
 

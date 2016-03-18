@@ -41,8 +41,8 @@ namespace SnakeServer
                         }
                         else
                         {
-                            myServer.SingleBroadcast(this, $"0;Name {message} is ok");
                             string restname = message.Substring(4);
+                            myServer.SingleBroadcast(this, $"0;Name {restname} is ok");
                             name = restname;
                             myServer.Broadcast($"{message} has join the gaming worlds");
                         }
