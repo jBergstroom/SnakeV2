@@ -83,8 +83,9 @@ namespace SnakeServer
                     Console.WriteLine("Starting Game in..");
                     for (int i = 3; i > 0; i--)
                     {
-                        Console.WriteLine(i);
+                        Console.WriteLine(i+"..");
                         Thread.Sleep(1000);
+                        Console.Beep();
                     }
                     StartGame();
 
