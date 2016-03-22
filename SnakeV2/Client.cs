@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -14,6 +13,7 @@ namespace SnakeV2
     {
         public bool nameOk = false;
         private TcpClient client;
+        public bool game = true;
         public void Start()
         {
             Console.WriteLine("Enter server IP");
@@ -29,12 +29,10 @@ namespace SnakeV2
 
             listenerThread.Join();
             senderThread.Join();
-
         }
 
         private void Send()
         {
-
             string message = "";
             try
             {
@@ -46,13 +44,28 @@ namespace SnakeV2
                     message = Console.ReadLine();
 
                     BinaryWriter writer = new BinaryWriter(streamer);
-                    writer.Write(message);
+                    writer.Write("name" + message);
                     writer.Flush();
                     Thread.Sleep(200);
                 }
                 while (true)
                 {
-                Console.WriteLine("Du är inne");
+                    ConsoleKeyInfo input = Console.ReadKey();
+                    if (input.Key == ConsoleKey.A)
+                    {
+                        BinaryWriter writer = new BinaryWriter(streamer);
+                        writer.Write(1);
+                        writer.Flush();
+                        
+                    }
+                    else if (input.Key == ConsoleKey.D)
+                    {
+                        BinaryWriter writer = new BinaryWriter(streamer);
+                        writer.Write(0);
+                        writer.Flush();
+                    }
+                    
+                    //Thread.Sleep(200);
                 }
             }
             catch (Exception ex)
@@ -75,9 +88,28 @@ namespace SnakeV2
                     else
                         Console.WriteLine(message[1]);
                 }
+                string tmp = "";
                 while (true)
                 {
-                    Thread.Sleep(100);
+                    NetworkStream streamer = client.GetStream();
+                    message = new BinaryReader(streamer).ReadString().Split(';');
+
+                    if (message.Length > 0)
+                    {
+                        Console.Clear();
+                        tmp = "";
+                        foreach (var item in message)
+                        {
+                            if (item != "")
+                            {
+                                tmp += item + "\n";
+                            }
+                            //Console.WriteLine(item);
+                        }
+
+                        Console.WriteLine(tmp);
+                    }
+                    Thread.Sleep(200);
                 }
             }
             catch (Exception ex)

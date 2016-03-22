@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SnakeServer
@@ -13,6 +14,9 @@ namespace SnakeServer
         public TcpClient tcpclient;
         private Server myServer;
         public string name;
+        public bool nameOccupied = true;
+        private List<string> colorList = new List<string> { "Red", "Blue", "Green", "Yellow", "Cyan", "Magenta", "Gray" };
+        private int colorCounter = 0;
         public ClientHandler(TcpClient c, Server server)
         {
             tcpclient = c;
@@ -24,42 +28,60 @@ namespace SnakeServer
             try
             {
                 string message = "";
-                bool nameOccupied = false;
                 do
                 {
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
+                    message.Trim();
+                    string color = colorList[colorCounter].ToUpper();
+                    colorCounter++;
+                    if (colorCounter > 7)
+                        colorCounter = 0;
+
                     nameOccupied = myServer.clientList.Select(x => x.name).Contains(message);
-                    if (nameOccupied)
+                    string partName = message.Substring(0, 4);
+                    if (message != "" && partName == "name")
                     {
-                        myServer.SingleBroadcast(this, "1;Name is occupadoo, gorom gorratt");
-                    }
-                    else
-                    {
-                        myServer.SingleBroadcast(this, $"0;Name is ok");
-                        myServer.Broadcast(this, $"{message} has join the gaming worlds");
+                        if (nameOccupied)
+                        {
+                            myServer.SingleBroadcast(this, "1;Name is occupadoo, gorom gorratt");
+                        }
+                        else
+                        {
+                            string restname = message.Substring(4);
+                            myServer.SingleBroadcast(this, $"0;Name {restname} is ok, your color is {color}");
+                            name = restname;
+                            myServer.Broadcast($"{message} has join the gaming worlds");
+                        }
                     }
                 } while (nameOccupied);
-
+                Thread.Sleep(50);
+                myServer.Broadcast("Waiting for other player;");
                 while (!myServer.GejmÅn)
                 {
-                    myServer.Broadcast(this, "Waiting for other player");
+                    //Console.WriteLine(name + " is waiting for game to start");
+                    Thread.Sleep(500);
+                    
                 }
                 while (myServer.GejmÅn && message != "ded")
                 {
                     NetworkStream n = tcpclient.GetStream();
                     message = new BinaryReader(n).ReadString();
-                    myServer.Broadcast(this, message);
+                    myServer.Broadcast(message);
                     Console.WriteLine(message);
                 }
 
-                myServer.DisconnectClient(this);
-                tcpclient.Close();
+                //myServer.DisconnectClient(this);
+                //tcpclient.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 myServer.DisconnectClient(this);
+                tcpclient.Close();
+                Console.WriteLine(ex.Message + " clienthandler exception");
+            }
+            finally
+            {
                 tcpclient.Close();
             }
         }
