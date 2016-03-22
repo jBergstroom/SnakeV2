@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -26,6 +27,9 @@ namespace SnakeV2
             Thread senderThread = new Thread(Send);
             senderThread.Start();
 
+            listenerThread.Join();
+            senderThread.Join();
+
         }
 
         private void Send()
@@ -44,6 +48,11 @@ namespace SnakeV2
                     BinaryWriter writer = new BinaryWriter(streamer);
                     writer.Write(message);
                     writer.Flush();
+                    Thread.Sleep(200);
+                }
+                while (true)
+                {
+                Console.WriteLine("Du är inne");
                 }
             }
             catch (Exception ex)
@@ -65,6 +74,10 @@ namespace SnakeV2
                         nameOk = true;
                     else
                         Console.WriteLine(message[1]);
+                }
+                while (true)
+                {
+                    Thread.Sleep(100);
                 }
             }
             catch (Exception ex)
